@@ -1,0 +1,218 @@
+{
+  "name": "quick-dynamic-template",
+  "displayName": "Quick Dynamic Template",
+  "description": "Quick Dynamic Template is a VSCode extension designed to expedite development. Leveraging Handlebars template syntax for rendering, it allows you to rapidly generate files for Vue, React, TypeScript, Java, REST, and more, all through a convenient right-click context menu.",
+  "version": "1.0.0",
+  "icon": "images/icon.png",
+  "publisher": "ftrybe",
+  "author": {
+    "name": "ftrybe"
+  },
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Other",
+    "Programming Languages",
+    "Snippets"
+  ],
+  "keywords": [
+    "vue",
+    "typescript",
+    "vue files",
+    "vue typescript",
+    "vue-typescript",
+    "right click",
+    "generate files",
+    "generate code"
+  ],
+  "activationEvents": [
+    "workspaceContains:*"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Ftrybe/quick-dynamic-template"
+  },
+  "bugs": {
+    "url": "https://github.com/Ftrybe/quick-dynamic-template/issues"
+  },
+  "main": "./out/bin/index.js",
+  "contributes": {
+    "configuration": {
+      "type": "object",
+      "title": "Quick Dynamic Template",
+      "properties": {
+        "quick-dynamic-template.group": {
+					"type": "object",
+					"default": {
+              "button1": {
+                "visible": true,
+                "name": "生成vue文件"
+              },
+              "button2": {
+                "visible": false
+              },
+              "button3": {
+                "visible": true,
+                "name": "生成ts文件"
+              }
+          },
+					"description": "%config.quick-dynamic-template.group%"
+				},
+        "quick-dynamic-template.templateDirPath": {
+          "type": ["string", "null"] ,
+          "default": null,
+          "description": "%config.quick-dynamic-template.template-path%"
+        },
+        "quick-dynamic-template.databases": {
+          "type": ["object", "null", "array"],
+          "default": null,
+          "description": "%config.quick-dynamic-template.databases%"
+        }
+      },
+      "jsonValidation": [
+        {
+          "fileMatch": "quick-dynamic-template.json",
+          "url": "./src/config/quick-dynamec-template-scheme.json"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "quick-dynamic-template.button1",
+        "title": "%commands.button1%",
+        "category": "quick-dynamic-template"
+      },
+      {
+        "command": "quick-dynamic-template.button2",
+        "title": "%commands.button2%",
+        "category": "quick-dynamic-template"
+      },
+      {
+        "command": "quick-dynamic-template.button3",
+        "title": "%commands.button3%",
+        "category": "quick-dynamic-template"
+      },
+      {
+        "command": "quick-dynamic-template.button4",
+        "title": "%commands.button4%",
+        "category": "quick-dynamic-template"
+      },
+      {
+        "command": "quick-dynamic-template.button5",
+        "title": "%commands.button5%",
+        "category": "quick-dynamic-template"
+      },
+      {
+        "command": "quick-dynamic-template.button6",
+        "title": "%commands.button6%",
+        "category": "quick-dynamic-template"
+      },
+      {
+        "command": "quick-dynamic-template.button7",
+        "title": "%commands.button7%",
+        "category": "quick-dynamic-template"
+      },
+      {
+        "command": "quick-dynamic-template.button8",
+        "title": "%commands.button8%",
+        "category": "quick-dynamic-template"
+      },
+      {
+        "command": "quick-dynamic-template.button9",
+        "title": "%commands.button9%",
+        "category": "quick-dynamic-template"
+      }, {
+        "command": "quick-dynamic-template.reloadConfig",
+        "title": "%commands.reload-config%",
+        "category": "quick-dynamic-template"
+      }
+    ],
+    "menus": {
+      "explorer/context": [
+        {
+          "when": "config.quick-dynamic-template.group.button1.visible",
+          "command": "quick-dynamic-template.button1",
+          "group": "quick-dynamic-template.group"
+        },
+        {
+          "when": "config.quick-dynamic-template.group.button2.visible",
+          "command": "quick-dynamic-template.button2",
+          "group": "quick-dynamic-template.group"
+        },
+        {
+          "when": "config.quick-dynamic-template.group.button3.visible",
+          "command": "quick-dynamic-template.button3",
+          "group": "quick-dynamic-template.group"
+        },
+        {
+          "when": "config.quick-dynamic-template.group.button4.visible",
+          "command": "quick-dynamic-template.button4",
+          "group": "quick-dynamic-template.group"
+        },
+        {
+          "when": "config.quick-dynamic-template.group.button5.visible",
+          "command": "quick-dynamic-template.button5",
+          "group": "quick-dynamic-template.group"
+        },
+        {
+          "when": "config.quick-dynamic-template.group.button6.visible",
+          "command": "quick-dynamic-template.button6",
+          "group": "quick-dynamic-template.group"
+        },
+        {
+          "when": "config.quick-dynamic-template.group.button7.visible",
+          "command": "quick-dynamic-template.button7",
+          "group": "quick-dynamic-template.group"
+        },
+        {
+          "when": "config.quick-dynamic-template.group.button8.visible",
+          "command": "quick-dynamic-template.button8",
+          "group": "quick-dynamic-template.group"
+        },
+        {
+          "when": "config.quick-dynamic-template.group.button9.visible",
+          "command": "quick-dynamic-template.button9",
+          "group": "quick-dynamic-template.group"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "templates": "copyfiles templates/**/*.tmpl ./out/",
+    "vscode:prepublish": "npm run templates && tsc -p ./",
+    "compile": "npm run templates watch",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile",
+    "test": "node ./out/test/runTest.js"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.3.9",
+    "@types/chai-as-promised": "^7.1.7",
+    "@types/fs-extra": "^11.0.3",
+    "@types/glob": "^8.1.0",
+    "@types/inflected": "^2.1.2",
+    "@types/mocha": "^10.0.3",
+    "@types/mssql": "^9.1.2",
+    "@types/node": "^20.4.6",
+    "@types/vscode": "^1.80.0",
+    "@typescript-eslint/eslint-plugin": "^6.8.0",
+    "@typescript-eslint/parser": "^6.8.0",
+    "@vscode/test-electron": "^2.3.5",
+    "chai": "^4.3.10",
+    "chai-as-promised": "^7.1.1",
+    "copyfiles": "^2.4.1",
+    "eslint": "^8.51.0",
+    "glob": "^10.3.10",
+    "mocha": "^10.2.0",
+    "typescript": "^5.2.2"
+  },
+  "dependencies": {
+    "class-transformer": "^0.5.1",
+    "dmdb": "^1.0.19862",
+    "fs-extra": "^11.1.1",
+    "handlebars": "^4.7.8",
+    "inflected": "^2.1.0",
+    "mysql2": "^3.6.2"
+  }
+}

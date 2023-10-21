@@ -1,0 +1,17 @@
+{
+	"config.quick-dynamic-template.group": "菜单按钮设置",
+	"config.quick-dynamic-template.template-path": "自定义模版路径设置",
+	"config.quick-dynamic-template.i18n-file-path": "国际化配置文件路径",
+	"config.quick-dynamic-template.databases": "数据库配置",
+	"extension.description": "My extension description.",
+	"commands.button1": "创建模版1",
+	"commands.button2": "创建模版2",
+	"commands.button3": "创建模版3",
+	"commands.button4": "创建模版4",
+	"commands.button5": "创建模版5",
+	"commands.button6": "创建模版6",
+	"commands.button7": "创建模版7",
+	"commands.button8": "创建模版8",
+	"commands.button9": "创建模版9",
+	"commands.reload-config": "重新加载配置"
+  }

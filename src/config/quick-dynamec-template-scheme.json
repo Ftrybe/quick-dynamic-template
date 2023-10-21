@@ -1,0 +1,21 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"type": "object",
+	"properties": {
+	  "quick-dynamec-template": {
+		"type": "object",
+		"properties": {
+		  "database": {
+			"type": "array",
+			"description": "Enable or disable feature X."
+		  },
+		  "templatePath": {
+			"type": "string",
+			"description": "模版路径"
+		  }
+		},
+		"required": ["database", "templatePath"]
+	  }
+	}
+  }
+  
