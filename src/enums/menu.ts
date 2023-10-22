@@ -19,3 +19,8 @@ export enum Menu {
     button9 = "template9"
 
 }
+
+
+export function getMenuValue(menuKey: keyof typeof Menu): string {
+    return Menu[menuKey];
+}

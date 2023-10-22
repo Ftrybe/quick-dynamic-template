@@ -10,7 +10,7 @@ import {
   OUT_FORMAT_OBJECT,
 } from "dmdb";
 
-export default class DB implements DbClient {
+export default class DmClient implements DbClient {
   private pool: Pool;
 
   constructor(private connConfig: ConnectionConfig) {

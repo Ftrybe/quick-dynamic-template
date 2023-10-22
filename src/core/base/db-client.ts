@@ -21,4 +21,10 @@ export default interface DBClient {
 	 * ```
 	 */
 	selectTables(): Promise<Array<Table>>;
+
+
+	/**
+	 * close connection
+	 */
+	close(): void;
 }

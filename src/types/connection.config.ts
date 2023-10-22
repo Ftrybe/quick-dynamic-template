@@ -36,13 +36,19 @@ export interface ConnectionConfig {
 	/**
 	 * database type
 	 * /
-	 * type?: string | undefined;
+	 * type?: string | undefined; only support mysql and dm
 	 */
-	dbType?: string | 'mysql' | 'mariadb' | 'postgres' | 'mssql' | undefined;
+	dbType?:  'mysql' | 'dm' | 'postgres' | 'mssql' | string | undefined;
 
 
     /**
      * schema name 
      */
     scheme?: string | undefined;
+
+
+    /**
+     * disabled config
+     */
+    disabled: boolean;
 }

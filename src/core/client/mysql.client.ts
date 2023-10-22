@@ -6,7 +6,7 @@ import Table from "../models/db/mysql-table"
 import DbClient from '../base/db-client';
 import { ConnectionConfig } from "@/types/connection.config";
 
-export default class DB implements DbClient {
+export default class MysqlClient implements DbClient {
 
   private connection: Pool;
 

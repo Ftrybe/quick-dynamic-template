@@ -3,7 +3,7 @@ import * as path from 'path';
 import Formatting from './formatting';
 import { HandleBarsHelper } from './handlebars-helper';
 import * as vscode from 'vscode';
-import { Menu } from './enums/menu';
+import { Menu, getMenuValue } from './enums/menu';
 import { Validator } from './validator';
 import { FileConfig } from './core/models/template/file-config';
 import Extension from './extension';
@@ -41,17 +41,21 @@ export class FileContents {
     const customPath = templateConfig;
 
     const templatesFilesPromises = Object.entries(config.group).map(item => {
-      const key = item[0];
+      const key = item[0] as any;
       const value = item[1] as ButtonConfig;
-      const file = (value.templateName ?? key) + ".hbr";
+      const file = (value.templateName ?? getMenuValue(key)) + ".hbr";
       // * 有自定义文件
       if (customPath && fs.existsSync(path.join(customPath, file))) {
-        return fs.readFile(path.join(customPath, file), 'utf8').then((data: any) => [file, data]);
+        return fs.readFile(path.join(customPath, file), 'utf8').then((data: any) => [key, data]);
       }
       if (!existsDefaultPath) {
-        return [file, ""];
+        return [key, ""];
       }
-      return fs.readFile(path.join(defaultFilePath, file), 'utf8').then((data: any) => [file, data])
+      if (!fs.existsSync(path.join(defaultFilePath, file))) {
+        vscode.window.showErrorMessage(`缺少${key}对应的模版文件${file}`)
+        return [key, ""];
+      }
+      return fs.readFile(path.join(defaultFilePath, file), 'utf8').then((data: any) => [key, data])
     });
 
     const templates = await Promise.all(templatesFilesPromises);
@@ -64,7 +68,7 @@ export class FileContents {
     let result = '';
     if (this.templatesMap.has(buttonKey)) {
       const template = this.templatesMap.get(buttonKey) || '';
-      const text = this.textCase(buttonKey, inputName, args);
+      const text = this.getParams(buttonKey, inputName, args);
       const intance = HandleBarsHelper.getInstance();
       const templateDelegate = intance.compile(template, { noEscape: true });
       result = templateDelegate(text);
@@ -72,89 +76,43 @@ export class FileContents {
     return result;
   }
 
-  private textCase(buttonKey: string, inputName: string, args: string[]): {} {
+  private getParams(buttonKey: string, inputName: string, args: string[]): {} {
     // const resourcesName = FileNameUtils.removeSuffix(templateName).toLocaleLowerCase();
     let className = inputName;
     let fileConfig: FileConfig = new FileConfig();
     var inputArgs: string[] = [];
-    // switch (resourcesName) {
-    //   case Menu.component:
-    //     this.parseConfig("component", async (key: string, jsonKey: any) => {
-    //       switch (key) {
-    //         case "prefix":
-    //           fileConfig.prefix = jsonKey;
-    //           break;
-    //         case "suffix":
-    //           fileConfig.suffix = jsonKey;
-    //           break;
-    //           case "templates":
-    //             if (jsonKey instanceof Array) {
-    //                 const array = jsonKey;
-    //                 fileConfig.templates = "\t";
-    //                 array.map((value, index, array) => {
-    //                     fileConfig.templates += value;
-    //                     if (index < array.length - 1) {
-    //                         fileConfig.templates += "\n\t";
-    //                     }
-    //                 });
-    //             } 
-    //           break;
-    //         case "styleLang":
-    //           fileConfig.styleLang = " lang='" + jsonKey + "'";
-    //           break;
-    //         case "templateLang":
-    //           fileConfig.templateLang = " lang='" + jsonKey + "'";
-    //           break;
-    //         case "styleScope":
-    //           fileConfig.styleScope = " " + jsonKey;
-    //       }
-    //     })
-    //     if (args) {
-    //       inputArgs = args;
-    //       args.forEach((value: string, index: number, array: string[]) => {
-    //         const nextValue = array[index + 1];
-    //         if (value.startsWith("-")) {
 
-    //           switch (value) {
-    //             case "-c" || "-component":
-    //               if (!Validator.hasArgs(nextValue)) {
-    //                 fileConfig.prefix = "";
-    //                 fileConfig.suffix = "";
-    //               }
-    //               break;
-    //             case "-s" || "-suffix":
-    //               if (Validator.hasArgs(nextValue)) {
-    //                 fileConfig.suffix = Formatting.toUpperCase(nextValue);
-    //               } else {
-    //                 fileConfig.suffix = "";
-    //               }
-    //               break;
-    //             case "-p" || "-prefix":
-    //               if (Validator.hasArgs(nextValue)) {
-    //                 fileConfig.prefix = Formatting.toUpperCase(nextValue);
-    //                 className = Formatting.toUpperCase(className);
-    //               } else {
-    //                 fileConfig.prefix = "";
-    //               }
-    //               break;
-    //           }
-    //         }
-    //       })
-    //     }
-    //     break;
-    //   case Menu.vuexModule:
-    //     this.parseConfig("vuex", (key: string, jsonKey: any) => {
-    //       switch (key) {
-    //         case "suffix":
-    //           fileConfig.suffix = jsonKey;
-    //           break;
-    //         case "exportModule":
-    //           fileConfig.exportModule = jsonKey;
-    //           break;
-    //       }
-    //     })
-    //     break;
-    // }
+    if (args) {
+      inputArgs = args;
+      args.forEach((value: string, index: number, array: string[]) => {
+        const nextValue = array[index + 1];
+        if (value.startsWith("-")) {
+          switch (value) {
+            case "-c" || "-component":
+              if (!Validator.hasArgs(nextValue)) {
+                fileConfig.prefix = "";
+                fileConfig.suffix = "";
+              }
+              break;
+            case "-s" || "-suffix":
+              if (Validator.hasArgs(nextValue)) {
+                fileConfig.suffix = Formatting.toUpperCase(nextValue);
+              } else {
+                fileConfig.suffix = "";
+              }
+              break;
+            case "-p" || "-prefix":
+              if (Validator.hasArgs(nextValue)) {
+                fileConfig.prefix = Formatting.toUpperCase(nextValue);
+                className = Formatting.toUpperCase(className);
+              } else {
+                fileConfig.prefix = "";
+              }
+              break;
+          }
+        }
+      })
+    }
 
     // if(this.parseConfig("file")?.spotStyleName){
     //   className = Formatting.toCamelCaseWithSpot(className);

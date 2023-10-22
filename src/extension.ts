@@ -8,8 +8,14 @@ import * as os from "os";
 
 import { GlobalConfig } from "@/types/global.config";
 import { ButtonConfig } from "@/types/button.config";
+import MysqlClient from "./core/client/mysql.client";
+import DmClient from "./core/client/dm.client";
+import Table from "./core/base/table";
 
 export default class Extension {
+
+	public static TABLE_LIST: Table[] = [];
+
 	private dialog: Dialog;
  
 	constructor() {
@@ -33,6 +39,42 @@ export default class Extension {
 		const disposable = commands.registerCommand(command, () => this.parseConfig());
 		context.subscriptions.push(disposable);
 	}
+
+
+	public connectDatabases(): void {
+		const databases = Extension.getConfig().databases;
+		if (databases) {
+			const enableDatabases = databases.filter(database => !database.disabled);
+			if (!databases || databases.length == 0) {
+				return
+			}
+
+			let tableList: Table[] = [];
+			enableDatabases.forEach(async database => {
+				switch (database.dbType) {
+					case "mysql":
+						console.log("connection mysql")
+						const mysqlClient = new MysqlClient(database);
+						const mysqlTables = await mysqlClient.selectTables();
+						mysqlTables.forEach(item => tableList.push(item));
+						mysqlClient.close();
+						break;
+					case "dm":
+						console.log("connection dmdb")
+						const dmClient = new DmClient(database);
+						const dmTables = await dmClient.selectTables();
+						dmTables.forEach(item => tableList.push(item));
+						dmClient.close();
+						break;
+					default:
+						break;
+				}
+			})
+
+			Extension.TABLE_LIST = tableList;
+		}
+	}
+	
 
 	public static getConfig() {
 		let config: GlobalConfig | undefined = undefined;

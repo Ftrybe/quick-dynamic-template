@@ -1,6 +1,9 @@
-out
-node_modules
-.vscode-test/
-*.vsix
-package-lock.json
+.DS_Store
+node_modules/
+npm-debug.log
+yarn-error.log
+build
+unpackage/*
 .idea
+out
+.vscode
