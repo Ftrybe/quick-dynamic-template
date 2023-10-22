@@ -16,4 +16,15 @@ export default interface Table {
 
     // 字段信息
     columns:Column[];
+
+
+    // 数据库类型
+    dbType: string;
+
+    // 主键列表
+    get primaryKeyColumns(): Column[];
+
+
+    // 普通列表
+    get baseColumns(): Column[];
 }

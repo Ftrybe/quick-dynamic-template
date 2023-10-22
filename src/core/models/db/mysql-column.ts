@@ -42,6 +42,7 @@ export default class MysqlColumn implements Column{
     @Expose({ name: "COLUMN_TYPE" })
     columnType: string;
 
+    // 主键为 PRI
     @Expose({ name: "COLUMN_KEY" })
     columnKey: string;
 

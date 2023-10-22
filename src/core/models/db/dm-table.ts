@@ -13,6 +13,21 @@ export default class DmsqlTable implements Table {
     @Expose({name:"COMMENTS"})
     tableComment: string;
 
+    dbType: string;
     
     columns:Column[] = new Array<Column>();
+
+
+    get primaryKeyColumns(): Column[] {
+        let primaryKeyColumns = new Array<Column>();
+        primaryKeyColumns = this.columns.filter(column => column.columnKey === "P");
+        return primaryKeyColumns;
+    }
+
+
+    get baseColumns(): Column[] {
+        let primaryKeyColumns = new Array<Column>();
+        primaryKeyColumns = this.columns.filter(column => column.columnKey !== "P");
+        return primaryKeyColumns;
+    }
 }

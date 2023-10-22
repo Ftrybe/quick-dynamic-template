@@ -14,7 +14,7 @@
 			"description": "模版路径"
 		  }
 		},
-		"required": ["database", "templatePath"]
+		"required": ["databases", "templatePath"]
 	  }
 	}
   }

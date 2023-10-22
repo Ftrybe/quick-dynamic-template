@@ -5,7 +5,6 @@ import { HandleBarsHelper } from './handlebars-helper';
 import * as vscode from 'vscode';
 import { Menu, getMenuValue } from './enums/menu';
 import { Validator } from './validator';
-import { FileConfig } from './core/models/template/file-config';
 import Extension from './extension';
 import { ButtonConfig } from './types/button.config';
 // import { TemplateConfig } from "./core/models/template/template-config";
@@ -79,34 +78,17 @@ export class FileContents {
   private getParams(buttonKey: string, inputName: string, args: string[]): {} {
     // const resourcesName = FileNameUtils.removeSuffix(templateName).toLocaleLowerCase();
     let className = inputName;
-    let fileConfig: FileConfig = new FileConfig();
     var inputArgs: string[] = [];
-
+    let tableName: string = "";
     if (args) {
       inputArgs = args;
       args.forEach((value: string, index: number, array: string[]) => {
         const nextValue = array[index + 1];
         if (value.startsWith("-")) {
           switch (value) {
-            case "-c" || "-component":
-              if (!Validator.hasArgs(nextValue)) {
-                fileConfig.prefix = "";
-                fileConfig.suffix = "";
-              }
-              break;
-            case "-s" || "-suffix":
+            case "-t" || "-table":
               if (Validator.hasArgs(nextValue)) {
-                fileConfig.suffix = Formatting.toUpperCase(nextValue);
-              } else {
-                fileConfig.suffix = "";
-              }
-              break;
-            case "-p" || "-prefix":
-              if (Validator.hasArgs(nextValue)) {
-                fileConfig.prefix = Formatting.toUpperCase(nextValue);
-                className = Formatting.toUpperCase(className);
-              } else {
-                fileConfig.prefix = "";
+                tableName = nextValue.toLocaleLowerCase();
               }
               break;
           }
@@ -114,20 +96,13 @@ export class FileContents {
       })
     }
 
-    // if(this.parseConfig("file")?.spotStyleName){
-    //   className = Formatting.toCamelCaseWithSpot(className);
-    // }
-    // 获取配置信息
-    className = fileConfig.prefix + (fileConfig.prefix ? "-" : "") + className + (fileConfig.suffix ? "-" : "") + fileConfig.suffix;
+    const tables =  Extension.TABLE_LIST;
+    const table = tableName != "" ? tables.filter(item => item.tableName.toLocaleLowerCase() == tableName)[0] : {};
 
     const result = {
-      // resourcesName: resourcesName,
-      upperName: Formatting.toUpperCase(className),
-      hyphensName: Formatting.toHyphensCase(className),
-      dynamicName: Formatting.toUpperCase(className),
       inputName: inputName,
       args: inputArgs,
-      fileName: Formatting.toUpperCase(inputName)
+      table: table
     }
     return result;
   }

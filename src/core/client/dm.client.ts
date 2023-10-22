@@ -89,14 +89,15 @@ export default class DmClient implements DbClient {
     const { rows: columns } = await this.query(columnsSql,[tableSchema]);
 
     const tables = new Array<any>();
-    Object.values(table).map((tableV) => {
-      const resultTable = plainToInstance(Table, tableV);
+    Object.values(table).map((tableInfo) => {
+      const resultTable = plainToInstance(Table, tableInfo);
       Object.values(columns).map((columnV: any, index) => {
         const col = plainToInstance(Column, columnV);
         if (col.tableName == resultTable.tableName) {
           resultTable.columns.push(col);
         }
       });
+      resultTable.dbType = "dm";
       tables.push(resultTable);
     });
     return tables;

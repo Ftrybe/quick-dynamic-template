@@ -43,14 +43,15 @@ export default class MysqlClient implements DbClient {
     const columns: Column[] = await this.query("select * from INFORMATION_SCHEMA.Columns where  table_schema = ?", [tableSchema]);
 
     const tables = new Array<Table>();
-    Object.values(table).map(tableV => {
-      const resultTable = plainToInstance(Table, tableV);
+    Object.values(table).map(tableInfo => {
+      const resultTable = plainToInstance(Table, tableInfo);
       Object.values(columns).map((columnV: Column, index) => {
         const col = plainToInstance(Column, columnV);
         if (col.tableName == resultTable.tableName) {
           resultTable.columns.push(col);
         }
       });
+      resultTable.dbType = "mysql";
       tables.push(resultTable);
     });
     return tables;

@@ -1,4 +1,6 @@
 import * as HandleBars from "handlebars";
+import StringFormatter from "./formatting";
+
 export class HandleBarsHelper {
 
     private static instance: typeof HandleBars = HandleBars.create();
@@ -45,7 +47,21 @@ export class HandleBarsHelper {
                 }
                 return false;
             },
-            
+            to_camel_case: function (v1) {
+                return StringFormatter.toCamelCase(v1);
+            },
+            to_title_case: function(v1) {
+                return StringFormatter.toTitleCase(v1);
+            },
+            to_pascal_case: function(v1) {
+                return StringFormatter.toTitleCase(v1);
+            },
+            to_hyphen_case: function(v1) {
+                return StringFormatter.toHyphenCase(v1);
+            },
+            to_locale_lower_case_first: function(v1) {
+                return StringFormatter.toLocaleLowerCaseFirst(v1);
+            }
         });
     }
 }

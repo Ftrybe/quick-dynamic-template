@@ -14,5 +14,19 @@ export default class MysqlTable implements Table {
     @Expose({name:"TABLE_COMMENT"})
     tableComment: string;
 
+    dbType: string;
+    
     columns:Column[] = new Array<Column>();
+
+    get primaryKeyColumns(): Column[] {
+        let primaryKeyColumns = new Array<Column>();
+        primaryKeyColumns = this.columns.filter(column => column.columnKey === "PRI");
+        return primaryKeyColumns;
+    }
+
+    get baseColumns(): Column[] {
+        let primaryKeyColumns = new Array<Column>();
+        primaryKeyColumns = this.columns.filter(column => column.columnKey !== "PRI");
+        return primaryKeyColumns;
+    }
 }

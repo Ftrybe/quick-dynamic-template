@@ -15,7 +15,7 @@ export default class DmsqlColumn implements Column {
     // 字段默认值
     @Expose({ name: "DATA_DEFAULT" })
     columnDefault: string;
-    // 是否为空
+    // 是否为空 'Y' | 'N'
     @Expose({ name: "NULLABLE" })
     isNullable: string;
     // 数据类型
@@ -40,6 +40,7 @@ export default class DmsqlColumn implements Column {
     @Expose({ name: "COLUMN_TYPE" })
     columnType: string;
 
+    // 主键为P
     @Expose({ name: "CONSTRAINT_TYPE" })
     columnKey: string;
 
