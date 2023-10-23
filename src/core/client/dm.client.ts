@@ -90,9 +90,9 @@ export default class DmClient implements DbClient {
 
     const tables = new Array<any>();
     Object.values(table).map((tableInfo) => {
-      const resultTable = plainToInstance(Table, tableInfo);
+      const resultTable = plainToInstance(Table, tableInfo, {excludeExtraneousValues: true});
       Object.values(columns).map((columnV: any, index) => {
-        const col = plainToInstance(Column, columnV);
+        const col = plainToInstance(Column, columnV, { excludeExtraneousValues: true});
         if (col.tableName == resultTable.tableName) {
           resultTable.columns.push(col);
         }

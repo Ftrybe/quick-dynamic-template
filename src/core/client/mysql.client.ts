@@ -44,9 +44,9 @@ export default class MysqlClient implements DbClient {
 
     const tables = new Array<Table>();
     Object.values(table).map(tableInfo => {
-      const resultTable = plainToInstance(Table, tableInfo);
+      const resultTable = plainToInstance(Table, tableInfo, {excludeExtraneousValues: true});
       Object.values(columns).map((columnV: Column, index) => {
-        const col = plainToInstance(Column, columnV);
+        const col = plainToInstance(Column, columnV, { excludeExtraneousValues: true});
         if (col.tableName == resultTable.tableName) {
           resultTable.columns.push(col);
         }

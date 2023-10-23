@@ -39,4 +39,17 @@ export default class IOUtil {
     });
     return flag;
   }
+
+  public static async directoryExists(directoryPath: string) {
+    try {
+      const stats = await fs.stat(directoryPath);
+      return stats.isDirectory();
+    } catch (error: any) {
+      if (error.code === 'ENOENT') {
+        // 路径不存在
+        return false;
+      }
+      throw error;  // 其他错误，例如权限问题
+    }
+  }
 }

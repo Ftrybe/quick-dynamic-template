@@ -13,5 +13,6 @@
 	"commands.button7": "创建模版7",
 	"commands.button8": "创建模版8",
 	"commands.button9": "创建模版9",
-	"commands.reload-config": "重新加载配置"
+	"commands.reload-config": "重新加载配置",
+	"commands.refresh-database": "刷新表结构信息"
   }

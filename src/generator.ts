@@ -28,10 +28,6 @@ export class Generator {
 
   private focusFiles(fileName: string) {
     vscode.window.showTextDocument(vscode.Uri.file(fileName));
-
-    // const position = new vscode.Position(lineNumber, columnNumber);  // lineNumber 和 columnNumber 是你想要光标移动到的位置
-    // const range = new vscode.Range(position, position);
-    // vscode.window.activeTextEditor?.revealRange(range);
   }
 
 }

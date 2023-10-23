@@ -122,9 +122,15 @@
         "command": "quick-dynamic-template.button9",
         "title": "%commands.button9%",
         "category": "quick-dynamic-template"
-      }, {
+      },
+      {
         "command": "quick-dynamic-template.reloadConfig",
         "title": "%commands.reload-config%",
+        "category": "quick-dynamic-template"
+      },
+      {
+        "command": "quick-dynamic-template.refreshDatabase",
+        "title": "%commands.refresh-database%",
         "category": "quick-dynamic-template"
       }
     ],

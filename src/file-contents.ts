@@ -1,12 +1,12 @@
 import * as fs from 'fs-extra';
 import * as path from 'path';
-import Formatting from './formatting';
 import { HandleBarsHelper } from './handlebars-helper';
 import * as vscode from 'vscode';
 import { Menu, getMenuValue } from './enums/menu';
 import { Validator } from './validator';
 import Extension from './extension';
 import { ButtonConfig } from './types/button.config';
+import IOUtil from './utils/io.utils';
 // import { TemplateConfig } from "./core/models/template/template-config";
 export class FileContents {
   private templatesMap: Map<string, string>;
@@ -33,7 +33,7 @@ export class FileContents {
     const rootPath = rootFolder.uri.fsPath;
     const defaultFilePath = path.join(rootPath, ".quick-dynamic-template");
 
-    const existsDefaultPath = await this.directoryExists(defaultFilePath);
+    const existsDefaultPath = await IOUtil.directoryExists(defaultFilePath);
 
     // const templatesFiles: string[] = await fs.readdir(defaultFilePath);
 
