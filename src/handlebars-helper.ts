@@ -1,5 +1,6 @@
 import * as HandleBars from "handlebars";
 import StringFormatter from "./formatting";
+import IOUtil from "./utils/io.utils";
 
 export class HandleBarsHelper {
 
@@ -54,13 +55,19 @@ export class HandleBarsHelper {
                 return StringFormatter.toTitleCase(v1);
             },
             to_pascal_case: function(v1) {
-                return StringFormatter.toTitleCase(v1);
+                return StringFormatter.toPascalCase(v1);
             },
             to_hyphen_case: function(v1) {
                 return StringFormatter.toHyphenCase(v1);
             },
             to_locale_lower_case_first: function(v1) {
                 return StringFormatter.toLocaleLowerCaseFirst(v1);
+            },
+            // json文件需要放在.quick-dynamic-template目录的resource目录下
+            case_from_json: function(v1, filename) {
+                const text = IOUtil.readText(filename);
+                const json = JSON.parse(text);
+                return json[v1] ?? json['default'];
             }
         });
     }

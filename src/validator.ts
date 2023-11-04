@@ -11,9 +11,7 @@ export class Validator {
 
     public static hasArgs(value: string) {
         if (value) {
-            if (this.hasIllegalCharacters(value))
-                return false;
-            return true;
+            return !this.hasIllegalCharacters(value)
         }
         return false;
     }

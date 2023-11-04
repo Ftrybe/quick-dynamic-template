@@ -1,4 +1,4 @@
-import { workspace, ExtensionContext, extensions, commands, window} from "vscode";
+import { workspace, ExtensionContext, extensions, commands, window } from "vscode";
 import Dialog from "./dialog";
 import { Menu } from "./enums/menu";
 
@@ -12,13 +12,14 @@ import MysqlClient from "./core/client/mysql.client";
 import DmClient from "./core/client/dm.client";
 import Table from "./core/base/table";
 import IOUtil from "./utils/io.utils";
+import DBClient from "./core/base/db-client";
 
 export default class Extension {
 
 	public static TABLE_LIST: Table[] = [];
 
 	private dialog: Dialog;
- 
+
 	constructor() {
 		this.dialog = new Dialog();
 	}
@@ -49,15 +50,9 @@ export default class Extension {
 
 
 	public async connectDatabases(refresh: boolean = false): Promise<void> {
-		const workspaceFolders = workspace.workspaceFolders;
-		const rootFolder = workspaceFolders![0];
-		const rootPath = rootFolder.uri.fsPath;
-		const defaultFilePath = path.join(rootPath, ".quick-dynamic-template");
-		const databaseFilePath = path.join(defaultFilePath, "database.json");
-
-		if (!refresh && fs.existsSync(databaseFilePath)) {
-			const content = fs.readFileSync(databaseFilePath, 'utf-8');
-			Extension.TABLE_LIST = JSON.parse(content);
+		const text = IOUtil.readText("database.json");
+		if (text && text != "" && !refresh) {
+			Extension.TABLE_LIST = JSON.parse(text);
 			return;
 		}
 
@@ -70,66 +65,44 @@ export default class Extension {
 
 			let tableList: Table[] = [];
 			for (const database of enableDatabases) {
-				switch (database.dbType) {
-					case "mysql":
-						console.log("connection mysql")
-						const mysqlClient = new MysqlClient(database);
-						const mysqlTables = await mysqlClient.selectTables();
-						tableList.push(...mysqlTables);
-						mysqlClient.close();
-						break;
-					case "dm":
-						console.log("connection dmdb")
-						const dmClient = new DmClient(database);
-						const dmTables = await dmClient.selectTables();
-						tableList.push(...dmTables);
-						dmClient.close();
-						break;
-					default:
-						break;
+				let client: DBClient;
+				const dbType = database.dbType;
+				if (dbType == "mysql") {
+					client = new MysqlClient(database);
+				} else if (dbType == "dm") {
+					client = new DmClient(database);
+				} else {
+					return;
 				}
+				const mysqlTables = await client.selectTables();
+				tableList.push(...mysqlTables);
+				client.close();
 			}
 
 			Extension.TABLE_LIST = tableList;
-	
+
 			if (tableList.length > 0) {
-				IOUtil.directoryExists(defaultFilePath).then( exists => {
-					if (!exists) {
-						fs.mkdirSync(defaultFilePath);
-					}
-					const tableInfo = JSON.stringify(tableList);
-					fs.outputFileSync(databaseFilePath, tableInfo)
-				});
+				const rootPath = IOUtil.createPlugInResourceDir();
+				if (rootPath == "") {
+					return;
+				}
+				const tableInfo = JSON.stringify(tableList);
+				fs.outputFileSync(rootPath, tableInfo)
 			}
 
 		}
 	}
-	
+
 
 	public static getConfig() {
-		let config: GlobalConfig | undefined = undefined;
-		// 读取当前目录下的配置文件信息
-		const workspaceFolders = workspace.workspaceFolders;
-		// 单工作区
-		if (workspaceFolders !== undefined && workspaceFolders.length > 0) {
-			const rootFolder = workspaceFolders[0];
-			const rootPath = rootFolder.uri.fsPath;
-			const filePath = path.join(rootPath, ".quick-dynamic-template.json");
-
-			const hasFile = fs.existsSync(filePath);
-			if (hasFile) {
-				const data = fs.readFileSync(filePath, "utf8");
-				config = JSON.parse(data);
-			}
-		}
-
+		const text = IOUtil.readText("config.json");
+		let config: GlobalConfig | undefined = JSON.parse(text);
 		const defaultConfigg = this.getWorksapceConfiguration();
 		if (!config) {
 			config = defaultConfigg;
 		} else {
 			config.templateDirPath = config.templateDirPath ?? defaultConfigg.templateDirPath;
 		}
-
 		return config;
 	}
 
@@ -140,8 +113,6 @@ export default class Extension {
 		this.updateButtonName(config.group);
 	}
 
-
-	
 
 	// 更新按钮名称
 	private updateButtonName(group: Record<string, ButtonConfig>) {
@@ -161,14 +132,14 @@ export default class Extension {
 
 		// 写回文件
 		if (needUpdate) fs.writeFileSync(filePath, JSON.stringify(jsonFile, null, 2));
-		
+
 	}
 
 	private updateGroupConfig(group: Record<string, ButtonConfig>) {
 		const filePath = this.getJsonFile("package.json");
 		const jsonFile = require(filePath);
 		const defaultConfig = jsonFile.contributes.configuration.properties['quick-dynamic-template.group'].default;
-		if (defaultConfig!=group) {
+		if (defaultConfig != group) {
 			jsonFile.contributes.configuration.properties['quick-dynamic-template.group'].default = group;
 			fs.writeFileSync(filePath, JSON.stringify(jsonFile, null, 2));
 		}

@@ -1,5 +1,6 @@
 import * as fs from 'fs-extra';
-import { window } from 'vscode';
+import {workspace, ExtensionContext, extensions, commands, window } from 'vscode';
+import * as path from "path";
 import { IFiles } from '../core/models/file';
 import { IPath } from '../core/models/path';
 import Extension from '../extension';
@@ -40,9 +41,9 @@ export default class IOUtil {
     return flag;
   }
 
-  public static async directoryExists(directoryPath: string) {
+  public static directoryExists(directoryPath: string): boolean {
     try {
-      const stats = await fs.stat(directoryPath);
+      const stats = fs.statSync(directoryPath);
       return stats.isDirectory();
     } catch (error: any) {
       if (error.code === 'ENOENT') {
@@ -51,5 +52,48 @@ export default class IOUtil {
       }
       throw error;  // 其他错误，例如权限问题
     }
+  }
+  
+
+  public static getWorksapcePath(): string | undefined {
+    const workspaceFolders = workspace.workspaceFolders;
+    if (!workspaceFolders) {
+      return undefined;
+    }
+		const rootFolder = workspaceFolders[0]; 
+		const rootPath = rootFolder.uri.fsPath;
+    return rootPath;
+  }
+
+  public static readText(url: string): string {
+      const rootPath = this.getWorksapcePath();
+      if (!rootPath) {
+        return "";
+      }
+			let filePath: string;
+      if (path.isAbsolute(url)) {
+        filePath = url;
+      } else {
+        filePath = path.join(rootPath,".quick-dynamic-template", url);
+      }
+			const hasFile = fs.existsSync(filePath);
+			if (hasFile) {
+				const data = fs.readFileSync(filePath, "utf8");
+        return data;
+			}
+      return "";
+  }
+
+  public static createPlugInResourceDir(): string {
+    const rootPath = this.getWorksapcePath();
+    if (!rootPath) {
+      return "";
+    }
+    const resourcePath = path.join(rootPath,".quick-dynamic-template");
+    const exists = IOUtil.directoryExists(resourcePath)
+    if (!exists) {
+      fs.mkdirSync(resourcePath);
+    }
+    return rootPath;
   }
 }
