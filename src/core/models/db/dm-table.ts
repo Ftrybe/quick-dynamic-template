@@ -13,7 +13,7 @@ export default class DmsqlTable implements Table {
     @Expose({name:"COMMENTS"})
     tableComment: string;
 
-    dbType: string;
+    connType: string;
     
     columns:Column[] = new Array<Column>();
 

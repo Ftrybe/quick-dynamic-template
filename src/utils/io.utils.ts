@@ -84,12 +84,42 @@ export default class IOUtil {
       return "";
   }
 
-  public static createPlugInResourceDir(): string {
+  public static readDirTexts(dir: string): string[] {
+    const rootPath = this.getWorksapcePath();
+    if (!rootPath) {
+      return [];
+    }
+    let fileDir: string;
+    if (path.isAbsolute(dir)) {
+      fileDir = dir;
+    } else {
+      fileDir = path.join(rootPath,".quick-dynamic-template", dir);
+    }
+    const hasDir = fs.existsSync(fileDir);
+    if (hasDir) {
+      const dirFiles = fs.readdirSync(fileDir);
+      let texts: string[] = [];
+      dirFiles.forEach(filePath => {
+        const data = fs.readFileSync(filePath, "utf8");
+        texts.push(data);
+      })
+      return texts;
+    }
+    return [];
+}
+
+  public static createPlugInResourceDir(subPath?: string): string {
     const rootPath = this.getWorksapcePath();
     if (!rootPath) {
       return "";
     }
-    const resourcePath = path.join(rootPath,".quick-dynamic-template");
+    let resourcePath ;
+    if (subPath) {
+      resourcePath = path.join(rootPath,".quick-dynamic-template", subPath);
+    } else {
+      resourcePath = path.join(rootPath,".quick-dynamic-template");
+    }
+    
     const exists = IOUtil.directoryExists(resourcePath)
     if (!exists) {
       fs.mkdirSync(resourcePath);

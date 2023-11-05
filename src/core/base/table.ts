@@ -19,7 +19,7 @@ export default interface Table {
 
 
     // 数据库类型
-    dbType: string;
+    connType: string;
 
     // 主键列表
     get primaryKeyColumns(): Column[];

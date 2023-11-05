@@ -10,6 +10,9 @@ import {
   OUT_FORMAT_OBJECT,
 } from "dmdb";
 
+/**
+ * 达梦数据库连接
+ */
 export default class DmClient implements DbClient {
   private pool: Pool;
 
@@ -97,7 +100,7 @@ export default class DmClient implements DbClient {
           resultTable.columns.push(col);
         }
       });
-      resultTable.dbType = "dm";
+      resultTable.connType = "dm";
       tables.push(resultTable);
     });
     return tables;

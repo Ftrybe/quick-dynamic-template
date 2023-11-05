@@ -13,6 +13,7 @@ import DmClient from "./core/client/dm.client";
 import Table from "./core/base/table";
 import IOUtil from "./utils/io.utils";
 import DBClient from "./core/base/db-client";
+import ApiClient from "./core/client/api.client";
 
 export default class Extension {
 
@@ -50,9 +51,13 @@ export default class Extension {
 
 
 	public async connectDatabases(refresh: boolean = false): Promise<void> {
-		const text = IOUtil.readText("database.json");
-		if (text && text != "" && !refresh) {
-			Extension.TABLE_LIST = JSON.parse(text);
+		const files = IOUtil.readDirTexts("databases");
+		if (files.length > 0 && !refresh) {
+			let tableList:Table[] = [];
+			files.forEach(text => {
+				tableList.push(JSON.parse(text));
+			})
+			Extension.TABLE_LIST = tableList;
 			return;
 		}
 
@@ -66,11 +71,14 @@ export default class Extension {
 			let tableList: Table[] = [];
 			for (const database of enableDatabases) {
 				let client: DBClient;
-				const dbType = database.dbType;
-				if (dbType == "mysql") {
+				const connType = database.connType;
+				if (connType == "mysql") {
 					client = new MysqlClient(database);
-				} else if (dbType == "dm") {
+				} else if (connType == "dm") {
 					client = new DmClient(database);
+				} 
+				else if (connType == "api") {
+					client = new ApiClient(database);
 				} else {
 					return;
 				}
@@ -82,12 +90,15 @@ export default class Extension {
 			Extension.TABLE_LIST = tableList;
 
 			if (tableList.length > 0) {
-				const rootPath = IOUtil.createPlugInResourceDir();
+				const rootPath = IOUtil.createPlugInResourceDir("databases");
 				if (rootPath == "") {
 					return;
 				}
-				const tableInfo = JSON.stringify(tableList);
-				fs.outputFileSync(rootPath, tableInfo)
+				tableList.forEach(table => {
+					const filePath = path.join(rootPath, "databases", table.tableName + ".json");
+					const tableInfo = JSON.stringify(table, null, 2);
+					fs.outputFileSync(filePath, tableInfo);
+				})
 			}
 
 		}

@@ -43,29 +43,36 @@
       "title": "Quick Dynamic Template",
       "properties": {
         "quick-dynamic-template.group": {
-					"type": "object",
-					"default": {
-              "button1": {
-                "visible": true,
-                "name": "生成vue文件"
-              },
-              "button2": {
-                "visible": false
-              },
-              "button3": {
-                "visible": true,
-                "name": "生成ts文件"
-              }
+          "type": "object",
+          "default": {
+            "button1": {
+              "visible": true,
+              "name": "生成vue文件"
+            },
+            "button2": {
+              "visible": false
+            },
+            "button3": {
+              "visible": true,
+              "name": "生成ts文件"
+            }
           },
-					"description": "%config.quick-dynamic-template.group%"
-				},
+          "description": "%config.quick-dynamic-template.group%"
+        },
         "quick-dynamic-template.templateDirPath": {
-          "type": ["string", "null"] ,
+          "type": [
+            "string",
+            "null"
+          ],
           "default": null,
           "description": "%config.quick-dynamic-template.template-path%"
         },
         "quick-dynamic-template.databases": {
-          "type": ["object", "null", "array"],
+          "type": [
+            "object",
+            "null",
+            "array"
+          ],
           "default": null,
           "description": "%config.quick-dynamic-template.databases%"
         }
@@ -214,6 +221,7 @@
     "typescript": "^5.2.2"
   },
   "dependencies": {
+    "axios": "^1.6.0",
     "class-transformer": "^0.5.1",
     "dmdb": "^1.0.19862",
     "fs-extra": "^11.1.1",

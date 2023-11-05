@@ -6,6 +6,10 @@ import Table from "../models/db/mysql-table"
 import DbClient from '../base/db-client';
 import { ConnectionConfig } from "@/types/connection.config";
 
+/**
+ * MYsql数据库连接
+ */
+
 export default class MysqlClient implements DbClient {
 
   private connection: Pool;
@@ -51,7 +55,7 @@ export default class MysqlClient implements DbClient {
           resultTable.columns.push(col);
         }
       });
-      resultTable.dbType = "mysql";
+      resultTable.connType = "mysql";
       tables.push(resultTable);
     });
     return tables;

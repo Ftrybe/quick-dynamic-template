@@ -38,7 +38,7 @@ export interface ConnectionConfig {
 	 * /
 	 * type?: string | undefined; only support mysql and dm
 	 */
-	dbType?:  'mysql' | 'dm' | 'postgres' | 'mssql' | string | undefined;
+	connType?:  'mysql' | 'dm' | 'postgres' | 'mssql' | 'api' | string | undefined;
 
 
     /**
