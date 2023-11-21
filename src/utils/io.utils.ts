@@ -4,7 +4,7 @@ import * as path from "path";
 import { IFiles } from '../core/models/file';
 import { IPath } from '../core/models/path';
 import Extension from '../extension';
-
+import * as Path from "path"
 export default class IOUtil {
   private constructor() { }
   public static async createFiles(loc: IPath, files: IFiles[]): Promise<string> {
@@ -99,8 +99,8 @@ export default class IOUtil {
     if (hasDir) {
       const dirFiles = fs.readdirSync(fileDir);
       let texts: string[] = [];
-      dirFiles.forEach(filePath => {
-        const data = fs.readFileSync(filePath, "utf8");
+      dirFiles.forEach(filenName => {
+        const data = fs.readFileSync(Path.join(fileDir, filenName), "utf8");
         texts.push(data);
       })
       return texts;
@@ -124,6 +124,6 @@ export default class IOUtil {
     if (!exists) {
       fs.mkdirSync(resourcePath);
     }
-    return rootPath;
+    return resourcePath;
   }
 }

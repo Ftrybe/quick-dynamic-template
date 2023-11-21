@@ -2,6 +2,8 @@ import { Menu } from "@/enums/menu";
 import { ButtonConfig } from "./button.config";
 import { ConnectionConfig } from "./connection.config";
 
+export type CharacterType = 'LowerCase' | 'UpperCase' | 'CamelCase' | 'TitleCase' | 'PascalCase' | 'HyphenCase' | 'LowerCaseFirst' | 'LowerCamelCase';
+
 export interface GlobalConfig {
 	/**
 	 * 
@@ -19,6 +21,20 @@ export interface GlobalConfig {
 	/**
 	 * 数据库配置
 	 */
-	databases: ConnectionConfig[] | undefined;
+	databases: ConnectionConfig[] | ConnectionConfig | undefined;
 
+	/**
+	 * 是否开启代码提示
+	 */
+	enableSnippets: boolean;
+
+	/**
+	 * 触发字符串
+	 */
+	triggerCharacters: string[];
+
+	/**
+	 * 触发字符串 default LowerCaseFirst
+	 */
+	characterType: CharacterType;
 }

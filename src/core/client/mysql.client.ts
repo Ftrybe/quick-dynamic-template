@@ -5,6 +5,7 @@ import Column from "../models/db/mysql-column"
 import Table from "../models/db/mysql-table"
 import DbClient from '../base/db-client';
 import { ConnectionConfig } from "@/types/connection.config";
+import { window as vsWindow } from "vscode";
 
 /**
  * MYsql数据库连接
@@ -29,6 +30,7 @@ export default class MysqlClient implements DbClient {
     return new Promise((resolve, reject) => {
       this.connection.query(sql, values, (err, rows) => {
         if (err) {
+          vsWindow.setStatusBarMessage(`Error initializing pool: ${err.message}`);
           reject(err);
         } else {
           resolve(rows);

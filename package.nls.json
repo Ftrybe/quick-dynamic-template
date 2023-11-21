@@ -3,6 +3,7 @@
 	"config.quick-dynamic-template.template-path": "自定义模版路径设置",
 	"config.quick-dynamic-template.i18n-file-path": "国际化配置文件路径",
 	"config.quick-dynamic-template.databases": "数据库配置",
+	"config.quick-dynamic-template.enable-snippets": "是否开启数据库字段提示",
 	"extension.description": "My extension description.",
 	"commands.button1": "创建模版1",
 	"commands.button2": "创建模版2",

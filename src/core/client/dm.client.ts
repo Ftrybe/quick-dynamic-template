@@ -3,6 +3,7 @@ import Column from "../models/db/dm-column";
 import Table from "../models/db/dm-table";
 import DbClient from "../base/db-client";
 import { ConnectionConfig } from "@/types/connection.config";
+import { window as vsWindow } from "vscode";
 import {
   Pool,
   createPool,
@@ -29,7 +30,7 @@ export default class DmClient implements DbClient {
       this.pool = await createPool(connAttrs);
       console.log("Pool initialized.");
     } catch (error) {
-      console.error("Error initializing pool:", error);
+      console.log(error);
     }
   }
 
@@ -46,7 +47,9 @@ export default class DmClient implements DbClient {
         (err, result) => {
           if (err) {
             reject(err);
+            vsWindow.setStatusBarMessage(`Error initializing pool: ${err.message}`);
           } else {
+
             resolve(result);
           }
         }

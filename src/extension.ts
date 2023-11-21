@@ -1,4 +1,4 @@
-import { workspace, ExtensionContext, extensions, commands, window } from "vscode";
+import { workspace, ExtensionContext, extensions, commands, languages } from "vscode";
 import Dialog from "./dialog";
 import { Menu } from "./enums/menu";
 
@@ -14,6 +14,8 @@ import Table from "./core/base/table";
 import IOUtil from "./utils/io.utils";
 import DBClient from "./core/base/db-client";
 import ApiClient from "./core/client/api.client";
+import { ConnectionConfig } from "./types/connection.config";
+import HandlebarsCompletionItemProvider from './provider/handlebars.provider'
 
 export default class Extension {
 
@@ -49,6 +51,16 @@ export default class Extension {
 		context.subscriptions.push(disposable);
 	}
 
+	public registerCompletionItemProvider(context: ExtensionContext): void {
+		let config = Extension.getConfig();
+		if (config.enableSnippets) {
+			// if (config.triggerCharacters) {
+			// 	languages.registerCompletionItemProvider('handlebars', new HandlebarsCompletionItemProvider(), ...config.triggerCharacters)
+			// }
+		}
+		languages.registerCompletionItemProvider('handlebars', new HandlebarsCompletionItemProvider(), ".")
+
+	}
 
 	public async connectDatabases(refresh: boolean = false): Promise<void> {
 		const files = IOUtil.readDirTexts("databases");
@@ -63,8 +75,12 @@ export default class Extension {
 
 		const databases = Extension.getConfig().databases;
 		if (databases) {
-			const enableDatabases = databases.filter(database => !database.disabled);
-			if (!databases || databases.length == 0) {
+			let _database = databases;
+			if (_database !== null && typeof _database === 'object' && !Array.isArray(_database)) {
+				_database = [databases as ConnectionConfig];
+			} 
+			let enableDatabases = _database.filter(database => !database.disabled);
+			if (enableDatabases.length == 0) {
 				return
 			}
 
@@ -76,8 +92,7 @@ export default class Extension {
 					client = new MysqlClient(database);
 				} else if (connType == "dm") {
 					client = new DmClient(database);
-				} 
-				else if (connType == "api") {
+				} else if (connType == "api") {
 					client = new ApiClient(database);
 				} else {
 					return;
@@ -95,19 +110,26 @@ export default class Extension {
 					return;
 				}
 				tableList.forEach(table => {
-					const filePath = path.join(rootPath, "databases", table.tableName + ".json");
+					const filePath = path.join(rootPath, table.tableName + ".json");
 					const tableInfo = JSON.stringify(table, null, 2);
+					fs.createFileSync(filePath);
 					fs.outputFileSync(filePath, tableInfo);
 				})
 			}
-
 		}
+
+		return Promise.resolve();
 	}
 
 
-	public static getConfig() {
+	public static getConfig() : GlobalConfig {
 		const text = IOUtil.readText("config.json");
-		let config: GlobalConfig | undefined = JSON.parse(text);
+		let config: GlobalConfig | undefined ;
+		try {
+			config = JSON.parse(text);
+		} catch(e) {
+			console.log("未找到项目配置");
+		}
 		const defaultConfigg = this.getWorksapceConfiguration();
 		if (!config) {
 			config = defaultConfigg;
@@ -128,6 +150,10 @@ export default class Extension {
 	// 更新按钮名称
 	private updateButtonName(group: Record<string, ButtonConfig>) {
 		const filePath = this.getJsonFile("package.nls.json");
+
+		if (!fs.existsSync(filePath)) {
+			return
+		}
 		const jsonFile = require(filePath);
 
 		let needUpdate = false;
@@ -148,6 +174,9 @@ export default class Extension {
 
 	private updateGroupConfig(group: Record<string, ButtonConfig>) {
 		const filePath = this.getJsonFile("package.json");
+		if (!fs.existsSync(filePath)) {
+			return
+		}
 		const jsonFile = require(filePath);
 		const defaultConfig = jsonFile.contributes.configuration.properties['quick-dynamic-template.group'].default;
 		if (defaultConfig != group) {

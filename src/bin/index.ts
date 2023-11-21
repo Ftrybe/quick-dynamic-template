@@ -11,6 +11,8 @@ export async function activate(context: ExtensionContext) {
    ex.registerButtonCommands(context);
    ex.registerReloadCommands(context);
    ex.connectDatabases();
+   ex.registerCompletionItemProvider(context);
+
    console.log("activate")
 }
 // this method is called when your extension is deactivated

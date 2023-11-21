@@ -1,0 +1,52 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"type": "object",
+	"properties": {
+		"templateDirPath": {
+			"type": "string",
+			"description": "Path to the template directory"
+		},
+		"group": {
+			"type": "object",
+			"description": "Configuration for each button",
+			"patternProperties": {
+				"^button[0-9]+$": {
+					"type": "object",
+					"properties": {
+						"visible": {
+							"type": "boolean",
+							"description": "Whether the button is visible"
+						},
+						"name": {
+							"type": "string",
+							"description": "Name of the action"
+						},
+						"suffix": {
+							"type": "string",
+							"description": "File suffix"
+						}
+					},
+					"required": [
+						"visible",
+						"name",
+						"suffix"
+					]
+				}
+			}
+		},
+		"databases": {
+			"type": "array",
+			"description": "List of database configurations",
+			"items": {
+				"type": "object",
+				"properties": {
+					"name": {
+						"type": "string",
+						"description": "Name of the database"
+					}
+				}
+			}
+		},
+		"additionalProperties": false
+	}
+}

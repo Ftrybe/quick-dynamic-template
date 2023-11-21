@@ -75,14 +75,13 @@
           ],
           "default": null,
           "description": "%config.quick-dynamic-template.databases%"
+        },
+        "quick-dynamic-template.enableSnippets": {
+            "type": "boolean",
+            "default": false,
+            "description": "%config.quick-dynamic-template.enable-snippets%"
         }
-      },
-      "jsonValidation": [
-        {
-          "fileMatch": "quick-dynamic-template.json",
-          "url": "./src/config/quick-dynamec-template-scheme.json"
-        }
-      ]
+      }
     },
     "commands": [
       {
@@ -189,7 +188,12 @@
           "group": "quick-dynamic-template.group"
         }
       ]
-    }
+    },
+    "languages": [{
+      "id": "handlebars",
+      "extensions": [".hbr"],
+      "aliases": ["handlebars"]
+    }]
   },
   "scripts": {
     "templates": "copyfiles templates/**/*.tmpl ./out/",
