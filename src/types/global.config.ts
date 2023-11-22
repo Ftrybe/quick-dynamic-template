@@ -26,7 +26,7 @@ export interface GlobalConfig {
 	/**
 	 * 是否开启代码提示
 	 */
-	enableSnippets: boolean;
+	// enableSnippets: boolean;
 
 	/**
 	 * 触发字符串

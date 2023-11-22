@@ -40,12 +40,70 @@
 			"items": {
 				"type": "object",
 				"properties": {
-					"name": {
+					"user": {
 						"type": "string",
-						"description": "Name of the database"
+						"description": "User name"
+					},
+					"password": {
+						"type": "string",
+						"description": "Password"
+					},
+					"host": {
+						"type": "string",
+						"description": "Host name"
+					},
+					"port": {
+						"type": "number",
+						"description": "Port number"
+					},
+					"charset": {
+						"type": "string",
+						"description": "Character set"
+					},
+					"timeout": {
+						"type": "number",
+						"description": "Timeout"
+					},
+					"connType": {
+						"type": "string",
+						"description": "Connection type",
+						"enum": [
+							"mysql",
+							"dm",
+							"api"
+						]
+					},
+					"scheme": {
+						"type": "string",
+						"description": "Scheme name"
+					},
+					"disabled": {
+						"type": "boolean",
+						"description": "Whether the database is disabled"
 					}
 				}
 			}
+		},
+		"triggerCharacters": {
+			"type": "array",
+			"description": "Not supported yet",
+			"items": {
+				"type": "string"
+			}
+		},
+		"characterType": {
+			"type": "string",
+			"description": "Not supported yet",
+			"enum": [
+				"LowerCase",
+				"varcUpperCasehar",
+				"CamelCase",
+				"TitleCase",
+				"PascalCase",
+				"HyphenCase",
+				"LowerCaseFirst",
+				"LowerCamelCase"
+			]
 		},
 		"additionalProperties": false
 	}

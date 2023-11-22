@@ -52,13 +52,8 @@ export default class Extension {
 	}
 
 	public registerCompletionItemProvider(context: ExtensionContext): void {
-		let config = Extension.getConfig();
-		if (config.enableSnippets) {
-			// if (config.triggerCharacters) {
-			// 	languages.registerCompletionItemProvider('handlebars', new HandlebarsCompletionItemProvider(), ...config.triggerCharacters)
-			// }
-		}
-		languages.registerCompletionItemProvider('handlebars', new HandlebarsCompletionItemProvider(), ".")
+		// let config = Extension.getConfig();
+		// languages.registerCompletionItemProvider('handlebars', new HandlebarsCompletionItemProvider())
 
 	}
 
@@ -123,7 +118,7 @@ export default class Extension {
 
 
 	public static getConfig() : GlobalConfig {
-		const text = IOUtil.readText("config.json");
+		const text = IOUtil.readText("quick-dynamic-template.json");
 		let config: GlobalConfig | undefined ;
 		try {
 			config = JSON.parse(text);

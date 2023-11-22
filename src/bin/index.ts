@@ -1,6 +1,6 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
-import { workspace, ExtensionContext, extensions, commands } from 'vscode';
+import { ExtensionContext } from 'vscode';
 import Extension from '../extension';
 
 // this method is called when your extension is activated
@@ -11,7 +11,7 @@ export async function activate(context: ExtensionContext) {
    ex.registerButtonCommands(context);
    ex.registerReloadCommands(context);
    ex.connectDatabases();
-   ex.registerCompletionItemProvider(context);
+   // ex.registerCompletionItemProvider(context);
 
    console.log("activate")
 }
